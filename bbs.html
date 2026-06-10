@@ -1,0 +1,360 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nara-mania 掲示板</title>
+<style>
+body {
+  background: #CCCC99;
+  margin: 0;
+  padding: 10px;
+  font-family: "MS Gothic", "ＭＳ ゴシック", monospace;
+  font-size: 13px;
+}
+h1 {
+  text-align: center;
+  color: #003333;
+  font-size: 20px;
+  text-shadow: 1px 1px 0 #999966;
+  margin: 0 0 4px;
+}
+.subtitle {
+  text-align: center;
+  color: #003333;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.bbs-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.stars {
+  text-align: center;
+  color: #003333;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+/* 投稿フォーム */
+.post-form {
+  background: #EEEECC;
+  border: 2px outset #999966;
+  padding: 8px;
+  margin-bottom: 12px;
+}
+.post-form h3 {
+  margin: 0 0 6px;
+  color: #333300;
+  font-size: 13px;
+  border-bottom: 1px solid #999966;
+  padding-bottom: 3px;
+}
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 6px;
+}
+.form-row label {
+  width: 70px;
+  color: #333300;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.form-row input[type="text"],
+.form-row select {
+  flex: 1;
+  font-family: inherit;
+  font-size: 12px;
+  border: 2px inset #999966;
+  background: #FFFFF8;
+  padding: 2px 4px;
+}
+.form-row textarea {
+  flex: 1;
+  font-family: inherit;
+  font-size: 12px;
+  border: 2px inset #999966;
+  background: #FFFFF8;
+  padding: 2px 4px;
+  height: 60px;
+  resize: vertical;
+}
+.form-btns {
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
+}
+.form-btns button {
+  background: #999966;
+  color: white;
+  border: 2px outset #CCCC99;
+  cursor: pointer;
+  padding: 3px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: bold;
+}
+.form-btns button:active {
+  border-style: inset;
+}
+/* 投稿一覧 */
+.post {
+  border: 1px solid #666633;
+  margin-bottom: 8px;
+  background: #FFFFEE;
+}
+.post-head {
+  background: #999966;
+  color: white;
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.post-num {
+  background: #CC9900;
+  color: white;
+  padding: 1px 5px;
+  font-size: 11px;
+  border: 1px solid #996600;
+}
+.post-name {
+  font-weight: bold;
+}
+.post-icon img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+.post-date {
+  color: #EEEECC;
+  font-size: 11px;
+  margin-left: auto;
+}
+.post-body {
+  padding: 6px 10px;
+  color: #333300;
+  line-height: 1.6;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.post-delete {
+  text-align: right;
+  padding: 2px 8px;
+  font-size: 10px;
+  color: #666666;
+}
+.post-delete a {
+  color: #CC0000;
+  text-decoration: none;
+}
+/* アイコン選択 */
+.icon-selector {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.icon-selector img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.icon-selector img.selected, .icon-selector img:hover {
+  border-color: #CC9900;
+}
+.page-title {
+  text-align: center;
+  margin-bottom: 4px;
+}
+.back-link {
+  text-align: center;
+  margin: 8px 0;
+}
+.back-link a {
+  color: #003333;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="bbs-wrap">
+  <div class="stars">☆★☆★☆★☆★☆★</div>
+  <h1>nara-mania 掲示板</h1>
+  <div class="subtitle">
+    奈良について語りましょう！お気軽に書き込んでください。<br>
+    <small>※このページはローカル動作のデモ版です。書き込みはブラウザを閉じると消えます。</small>
+  </div>
+  <div class="stars">☆★☆★☆★☆★☆★</div>
+
+  <div class="back-link"><a href="index.html">← nara-maniaトップへ</a></div>
+
+  <!-- 投稿フォーム -->
+  <div class="post-form">
+    <h3>📝 新規投稿</h3>
+    <div class="form-row">
+      <label>お名前</label>
+      <input type="text" id="inp-name" placeholder="おだしー" maxlength="20">
+    </div>
+    <div class="form-row">
+      <label>メール</label>
+      <input type="text" id="inp-mail" placeholder="（省略可）" maxlength="50">
+    </div>
+    <div class="form-row">
+      <label>件名</label>
+      <input type="text" id="inp-subject" placeholder="奈良のことなら何でも！" maxlength="40">
+    </div>
+    <div class="form-row">
+      <label>アイコン</label>
+      <div class="icon-selector" id="icon-selector">
+        <img src="icon/bear.gif" data-icon="bear.gif" alt="クマ" title="クマ">
+        <img src="icon/cat.gif" data-icon="cat.gif" alt="ネコ" title="ネコ">
+        <img src="icon/cow.gif" data-icon="cow.gif" alt="ウシ" title="ウシ">
+        <img src="icon/dog.gif" data-icon="dog.gif" alt="イヌ" title="イヌ">
+        <img src="icon/fox.gif" data-icon="fox.gif" alt="キツネ" title="キツネ">
+        <img src="icon/hituji.gif" data-icon="hituji.gif" alt="ヒツジ" title="ヒツジ">
+        <img src="icon/monkey.gif" data-icon="monkey.gif" alt="サル" title="サル">
+        <img src="icon/mouse.gif" data-icon="mouse.gif" alt="ネズミ" title="ネズミ">
+        <img src="icon/panda.gif" data-icon="panda.gif" alt="パンダ" title="パンダ">
+        <img src="icon/pig.gif" data-icon="pig.gif" alt="ブタ" title="ブタ">
+        <img src="icon/usagi.gif" data-icon="usagi.gif" alt="ウサギ" title="ウサギ">
+        <img src="icon/zou.gif" data-icon="zou.gif" alt="ゾウ" title="ゾウ">
+      </div>
+    </div>
+    <div class="form-row">
+      <label>本文</label>
+      <textarea id="inp-body" placeholder="奈良の思い出、おすすめスポット、なんでも歓迎！"></textarea>
+    </div>
+    <div class="form-btns">
+      <button onclick="submitPost()">　書き込む　</button>
+      <button onclick="clearForm()">クリア</button>
+    </div>
+  </div>
+
+  <!-- 掲示板メッセージ -->
+  <div id="posts-container"></div>
+
+</div>
+
+<script>
+// 初期サンプル投稿
+const INITIAL_POSTS = [
+  {
+    id: 1,
+    name: 'おだしー（管理人）',
+    icon: 'bear.gif',
+    subject: 'nara-mania掲示板へようこそ！',
+    body: 'はじめまして、管理人のおだしーです。\n奈良のことなら何でも語り合いましょう！\nおすすめスポット、旅行記、写真の感想など何でも歓迎です。\nどうぞよろしくおねがいします（＾＾）',
+    date: '2000/04/06 12:00'
+  },
+  {
+    id: 2,
+    name: '鹿せんべい大好き',
+    icon: 'usagi.gif',
+    subject: '春日大社の万灯籠！',
+    body: '先日春日大社の万灯籠祭りに行ってきました！\n2月3日の節分の夜、境内の灯籠が全部点灯されて幻想的でしたよ〜。\n一度は見ておくべき奈良の絶景だと思います。\nnara-maniaさんのページで予習してから行ったので余計に感動しました！',
+    date: '2000/04/05 18:30'
+  },
+  {
+    id: 3,
+    name: '吉野さくら',
+    icon: 'hituji.gif',
+    subject: '吉野の桜、最高でした',
+    body: '今年の春は吉野山の桜を見に行きました。\n下千本〜上千本まで歩いてへとへとになりましたが、それだけの価値あり！\n柿の葉寿司を食べながら桜を眺める幸せよ・・・。\nまた来年も絶対行きます！',
+    date: '2000/04/04 09:15'
+  }
+];
+
+let selectedIcon = 'bear.gif';
+let posts = [];
+
+function loadPosts() {
+  const stored = sessionStorage.getItem('nara_bbs_posts');
+  if (stored) {
+    posts = JSON.parse(stored);
+  } else {
+    posts = [...INITIAL_POSTS];
+  }
+}
+
+function savePosts() {
+  sessionStorage.setItem('nara_bbs_posts', JSON.stringify(posts));
+}
+
+function renderPosts() {
+  const container = document.getElementById('posts-container');
+  if (posts.length === 0) {
+    container.innerHTML = '<p style="text-align:center;color:#666633;">まだ投稿がありません。最初の書き込みをどうぞ！</p>';
+    return;
+  }
+  container.innerHTML = posts.slice().reverse().map((p, i) => `
+    <div class="post" id="post-${p.id}">
+      <div class="post-head">
+        <span class="post-num">No.${p.id}</span>
+        <span class="post-icon"><img src="icon/${p.icon}" alt="アイコン"></span>
+        <span class="post-name">${escHtml(p.name)}</span>
+        <span style="flex:1; font-weight:bold; color:#FFFFCC;">【${escHtml(p.subject)}】</span>
+        <span class="post-date">${p.date}</span>
+      </div>
+      <div class="post-body">${escHtml(p.body)}</div>
+      <div class="post-delete"><a href="#" onclick="deletePost(${p.id});return false;">削除</a></div>
+    </div>
+  `).join('');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+}
+
+function submitPost() {
+  const name = document.getElementById('inp-name').value.trim() || '名無し奈良人';
+  const subject = document.getElementById('inp-subject').value.trim() || '（タイトルなし）';
+  const body = document.getElementById('inp-body').value.trim();
+  if (!body) { alert('本文を入力してください'); return; }
+  const now = new Date();
+  const date = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const maxId = posts.reduce((m, p) => Math.max(m, p.id), 0);
+  posts.push({ id: maxId + 1, name, icon: selectedIcon, subject, body, date });
+  savePosts();
+  renderPosts();
+  clearForm();
+  alert('書き込みました！');
+}
+
+function clearForm() {
+  document.getElementById('inp-name').value = '';
+  document.getElementById('inp-mail').value = '';
+  document.getElementById('inp-subject').value = '';
+  document.getElementById('inp-body').value = '';
+}
+
+function deletePost(id) {
+  if (!confirm('この投稿を削除しますか？')) return;
+  posts = posts.filter(p => p.id !== id);
+  savePosts();
+  renderPosts();
+}
+
+// アイコン選択
+document.getElementById('icon-selector').addEventListener('click', function(e) {
+  const img = e.target.closest('img');
+  if (!img) return;
+  document.querySelectorAll('.icon-selector img').forEach(i => i.classList.remove('selected'));
+  img.classList.add('selected');
+  selectedIcon = img.dataset.icon;
+});
+
+// 初期化
+loadPosts();
+renderPosts();
+// 最初のアイコンを選択状態に
+document.querySelector('.icon-selector img').classList.add('selected');
+</script>
+</body>
+</html>

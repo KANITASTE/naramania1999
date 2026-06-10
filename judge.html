@@ -1,0 +1,650 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>naramaniaチェック！！</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  background: lemonchiffon;
+  margin: 0;
+  padding: 10px;
+  font-family: "MS Gothic", "ＭＳ ゴシック", monospace;
+  font-size: 13px;
+}
+h1 {
+  text-align: center;
+  color: #003300;
+  font-size: 22px;
+  margin: 10px 0 4px;
+}
+.subtitle {
+  text-align: center;
+  color: #556655;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.quiz-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* START SCREEN */
+#start-screen {
+  text-align: center;
+  padding: 20px;
+  background: #FFFFCC;
+  border: 3px outset #CCCC66;
+  margin-bottom: 12px;
+}
+#start-screen p {
+  color: #333300;
+  line-height: 1.8;
+  margin: 10px 0;
+}
+.start-btn {
+  display: inline-block;
+  background: #CC6600;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 30px;
+  border: 3px outset #FFAA44;
+  cursor: pointer;
+  margin: 10px;
+  font-family: inherit;
+}
+.start-btn:active { border-style: inset; }
+
+/* QUIZ SCREEN */
+#quiz-screen { display: none; }
+.progress-bar-outer {
+  background: #CCCC99;
+  border: 2px inset #999966;
+  height: 14px;
+  margin-bottom: 8px;
+  position: relative;
+}
+.progress-bar-inner {
+  background: #CC9900;
+  height: 100%;
+  transition: width 0.3s;
+}
+.progress-label {
+  text-align: center;
+  color: #333300;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+/* 問題エリア */
+.question-box {
+  background: green;
+  padding: 3px;
+  margin-bottom: 10px;
+}
+.question-inner {
+  background: #FFCCFF;
+}
+.question-header {
+  background: orange;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+  font-size: 14px;
+}
+.question-text {
+  padding: 12px 16px;
+  color: #330033;
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 60px;
+}
+.options {
+  display: flex;
+  gap: 8px;
+  padding: 6px 16px 12px;
+  flex-wrap: wrap;
+}
+.option-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  border: 2px outset #CCCC99;
+  background: #FFFFCC;
+  color: #330033;
+  transition: background 0.1s;
+}
+.option-btn:hover:not(:disabled) {
+  background: #FFFF99;
+  border-style: inset;
+}
+.option-btn:disabled { cursor: default; }
+.option-btn.correct { background: #99FF99; border-color: #006600; color: #003300; font-weight: bold; }
+.option-btn.wrong { background: #FF9999; border-color: #CC0000; color: #330000; }
+.option-btn.reveal { background: #CCFFCC; border-color: #009900; }
+
+.answer-comment {
+  display: none;
+  padding: 6px 16px 10px;
+  color: #333300;
+  font-size: 12px;
+  background: #FFFFEE;
+  border-top: 1px dashed #CCCC66;
+}
+.answer-comment.show { display: block; }
+
+.next-btn {
+  display: block;
+  margin: 0 auto 10px;
+  background: #336699;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 7px 28px;
+  border: 3px outset #6699CC;
+  cursor: pointer;
+  font-family: inherit;
+}
+.next-btn:active { border-style: inset; }
+
+/* RESULT SCREEN */
+#result-screen {
+  display: none;
+  text-align: center;
+  background: #FFFFCC;
+  border: 3px outset #CCCC66;
+  padding: 20px;
+}
+.result-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #CC6600;
+  margin: 10px 0;
+}
+.result-score {
+  font-size: 48px;
+  font-weight: bold;
+  color: #990000;
+  margin: 10px 0;
+}
+.result-label {
+  font-size: 20px;
+  font-weight: bold;
+  color: #336633;
+  margin: 10px 0;
+  padding: 8px 20px;
+  display: inline-block;
+  border: 3px solid #336633;
+  background: #EEFFEE;
+}
+.result-comment {
+  font-size: 14px;
+  color: #333300;
+  margin: 12px 0;
+  line-height: 1.8;
+}
+.result-btn {
+  display: inline-block;
+  background: #CC6600;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 24px;
+  border: 3px outset #FFAA44;
+  cursor: pointer;
+  margin: 8px 4px;
+  font-family: inherit;
+}
+.result-btn:active { border-style: inset; }
+.score-breakdown {
+  margin: 10px auto;
+  text-align: left;
+  max-width: 400px;
+  font-size: 12px;
+}
+.score-breakdown table { border-collapse: collapse; width: 100%; }
+.score-breakdown td { padding: 3px 8px; border: 1px solid #CCCC66; }
+.score-breakdown .correct-row td { background: #DDFFDD; }
+.score-breakdown .wrong-row td { background: #FFDDDD; }
+
+.back-link { margin-top: 10px; }
+.back-link a { color: #003366; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+  <h1>🦌 naramaniaチェック！！</h1>
+  <div class="subtitle">あなたはどのくらい奈良通？マニアック問題に挑戦！</div>
+
+  <!-- スタート画面 -->
+  <div id="start-screen">
+    <p>
+      40問の奈良マニアック問題から<strong>ランダムに10問</strong>を出題します。<br>
+      4択から正解を選んでください！<br><br>
+      <strong style="color:#990000;">0〜3問正解</strong>　→　残念レベル<br>
+      <strong style="color:#996600;">4〜6問正解</strong>　→　観光客レベル<br>
+      <strong style="color:#336633;">7〜9問正解</strong>　→　ぷちnaramania<br>
+      <strong style="color:#CC0000;">10問全問正解</strong>　→　🏆 naramania ！！
+    </p>
+    <button class="start-btn" onclick="startQuiz()">　スタート！　</button>
+    <div class="back-link"><a href="index.html">← nara-maniaトップへ</a></div>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div id="quiz-screen">
+    <div class="progress-label" id="progress-label">問題 1 / 10</div>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progress-bar" style="width:10%"></div>
+    </div>
+    <div class="question-box">
+      <div class="question-inner">
+        <div class="question-header" id="q-header">問題 1</div>
+        <div class="question-text" id="q-text"></div>
+        <div class="options" id="q-options"></div>
+        <div class="answer-comment" id="q-comment"></div>
+      </div>
+    </div>
+    <button class="next-btn" id="next-btn" style="display:none;" onclick="nextQuestion()">次の問題 →</button>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="result-screen">
+    <div class="result-title">🦌 結果発表！</div>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-label" id="result-label"></div>
+    <div class="result-comment" id="result-comment"></div>
+    <div class="score-breakdown" id="score-breakdown"></div>
+    <br>
+    <button class="result-btn" onclick="startQuiz()">もう一度挑戦！</button>
+    <button class="result-btn" onclick="location.href='../index.html'">トップへ戻る</button>
+  </div>
+</div>
+
+<script>
+// ====== 40問の奈良マニアック問題 ======
+const ALL_QUESTIONS = [
+  {
+    q: "東大寺大仏殿の大仏（廬舎那仏）の高さは？",
+    options: ["約12m","約15m","約18m","約24m"],
+    answer: 1,
+    comment: "廬舎那仏の高さは約14.98m（約15m）。現在の大仏殿は江戸時代再建で、奈良時代のものよりひとまわり小さくなっています。"
+  },
+  {
+    q: "法隆寺の「七不思議」のひとつ、五重塔の九輪に取り付けられているものは？",
+    options: ["鈴","鎌","鐘","剣"],
+    answer: 1,
+    comment: "五重塔の九輪には4本の鎌が取り付けられています。落雷よけの呪いとも、工事中の棟梁が怨念で鎌を投げつけたとも言われています。"
+  },
+  {
+    q: "奈良市の市の花は？",
+    options: ["梅","桜","菊","八重桜"],
+    answer: 3,
+    comment: "奈良市の市の花は「八重桜」。毎年4月の奈良公園の八重桜は見事です。市の木は「奈良八重桜」と同様に「杉」。"
+  },
+  {
+    q: "春日大社の「万灯籠」は年に何回行われるか？",
+    options: ["1回","2回","3回","4回"],
+    answer: 1,
+    comment: "節分万灯籠（2月3日）と中元万灯籠（8月14・15日）の年2回行われます。境内約3,000基の灯籠が点灯される幻想的な祭事です。"
+  },
+  {
+    q: "東大寺二月堂の「お水取り」（修二会）のクライマックスの行事は何月？",
+    options: ["1月","2月","3月","4月"],
+    answer: 2,
+    comment: "修二会は旧暦2月（現在の3月）に行われます。3月12日深夜の「お水取り」が有名で、大きな松明が舞台を走り回ります。"
+  },
+  {
+    q: "唐招提寺で5月19日に行われる、ハート型の団扇をまく行事は？",
+    options: ["うちわまき","あおぎまつり","ほうき祭り","扇祭り"],
+    answer: 0,
+    comment: "「うちわまき」。団扇は病気を打ち払う（打つ＝団扇）という意味があり、投げられた団扇を受け取ると無病息災のご利益があるとされます。"
+  },
+  {
+    q: "「女人高野」と呼ばれる奈良県の寺院は？",
+    options: ["長谷寺","室生寺","金峯山寺","當麻寺"],
+    answer: 1,
+    comment: "室生寺は高野山が女人禁制だった時代、女性の参拝を受け入れていたため「女人高野」と親しまれてきました。"
+  },
+  {
+    q: "奈良の名産「三輪そうめん」の産地・三輪がある市は？",
+    options: ["橿原市","桜井市","天理市","大和郡山市"],
+    answer: 1,
+    comment: "三輪そうめんは桜井市三輪が発祥。大神神社（おおみわじんじゃ）の門前町として栄え、日本最古のそうめんの産地といわれています。"
+  },
+  {
+    q: "奈良公園の鹿は何の使いとされているか？",
+    options: ["天照大神","春日大社の神","大仏の使い","猿田彦"],
+    answer: 1,
+    comment: "奈良の鹿は春日大社の神（武甕槌命）の使いとされています。神鹿として大切にされており、国の天然記念物に指定されています。"
+  },
+  {
+    q: "吉野山の桜の見頃の区分で「上千本」「中千本」「下千本」のうち、最も見頃が早いのは？",
+    options: ["上千本","中千本","下千本","同時"],
+    answer: 2,
+    comment: "標高が低い「下千本」から咲き始め、「中千本」「上千本」の順に開花します。山全体で数週間かけて見頃が移っていきます。"
+  },
+  {
+    q: "法隆寺が世界遺産に登録されたのは何年？",
+    options: ["1990年","1993年","1996年","1998年"],
+    answer: 1,
+    comment: "1993年（平成5年）に「法隆寺地域の仏教建造物」としてユネスコ世界遺産（文化遺産）に登録されました。日本初の世界遺産のひとつです。"
+  },
+  {
+    q: "奈良県の県鳥は？",
+    options: ["鷲","コウノトリ","カラス","鶯（うぐいす）"],
+    answer: 3,
+    comment: "奈良県の県鳥は「鶯（うぐいす）」。万葉集にも詠まれており、奈良の豊かな自然を象徴する鳥として選ばれました。"
+  },
+  {
+    q: "大神神社（おおみわじんじゃ）の御神体は？",
+    options: ["大きな岩","三輪山","橿原神宮","御神木の杉"],
+    answer: 1,
+    comment: "大神神社は社殿の後ろにそびえる三輪山そのものを御神体とする、日本最古の神社のひとつ。拝殿はありますが本殿を持ちません。"
+  },
+  {
+    q: "奈良の伝統工芸「赤膚焼（あかはだやき）」のある最寄り駅は近鉄どこ？",
+    options: ["近鉄奈良駅","尼辻駅","西大寺駅","菖蒲池駅"],
+    answer: 1,
+    comment: "近鉄橿原線・尼辻駅から徒歩圏内に赤膚焼の窯元があります。奈良を代表する焼き物で、絵付け体験もできます。"
+  },
+  {
+    q: "橿原市にある「橿原神宮」に祀られている神は誰？",
+    options: ["聖徳太子","神武天皇","持統天皇","平城天皇"],
+    answer: 1,
+    comment: "橿原神宮は初代天皇・神武天皇を祀る神社。明治23年に創建され、宮崎の神武天皇の生誕地と並ぶ、神武天皇ゆかりの聖地です。"
+  },
+  {
+    q: "奈良の「柿の葉すし」に使われる魚は主に何？",
+    options: ["鯵（あじ）","鮭（さけ）","鯖（さば）と鮭（さけ）","鯛（たい）"],
+    answer: 2,
+    comment: "柿の葉すしには鯖（さば）と鮭（さけ）を使うのが定番。塩でしめた魚と白飯を柿の葉で包んで重石をかけて熟成させます。"
+  },
+  {
+    q: "奈良の「若草山」の山焼きが行われるのは何月？",
+    options: ["1月","3月","5月","10月"],
+    answer: 0,
+    comment: "若草山の山焼きは毎年1月下旬（成人の日の翌土曜日）に行われます。花火とともに夜空を染める炎は奈良の冬の風物詩です。"
+  },
+  {
+    q: "室生寺の五重塔が台風の倒木で大きな被害を受けたのは何年？",
+    options: ["1987年","1990年","1998年","2004年"],
+    answer: 2,
+    comment: "1998年（平成10年）の台風7号で、倒木が五重塔を直撃。塔の最上部が大きく損傷し、修復には多くの時間と費用がかかりました。"
+  },
+  {
+    q: "奈良の「天川村」にある金峯山修験本宗総本山は？",
+    options: ["金峯山寺","天河大弁財天社","洞川温泉","吉野水分神社"],
+    answer: 0,
+    comment: "金峯山寺（きんぷせんじ）は吉野山にある修験道の総本山。本堂「蔵王堂」には日本最大の秘仏・蔵王権現像が安置されています。"
+  },
+  {
+    q: "法隆寺で秘仏・救世観音がフェノロサと岡倉天心によって開帳されたのは？",
+    options: ["江戸時代末期","明治17年","大正元年","昭和10年"],
+    answer: 1,
+    comment: "明治17年（1884年）、フェノロサと岡倉天心が調査のため夢殿の救世観音を開帳しました。それまで千数百年もの間、誰も開けることのなかった宝庫でした。"
+  },
+  {
+    q: "奈良県で生産される農産物として特に有名なのは？",
+    options: ["みかん","柿","りんご","ぶどう"],
+    answer: 1,
+    comment: "奈良県は全国屈指の柿の産地。「大和の柿」として有名で、平核無（ひらたねなし）などの品種が多く栽培されています。"
+  },
+  {
+    q: "奈良盆地を東西に走る古代の道「山の辺の道」の北の起点となる神社は？",
+    options: ["春日大社","大神神社","石上神宮","橿原神宮"],
+    answer: 2,
+    comment: "山の辺の道は、北の石上神宮（いそのかみじんぐう）から南の大神神社（おおみわじんじゃ）まで続く、日本最古の道といわれています。"
+  },
+  {
+    q: "「生駒の聖天さん」として知られる宝山寺を建立したのは誰？",
+    options: ["弘法大師","湛海律師","行基","最澄"],
+    answer: 1,
+    comment: "宝山寺は1678年に湛海律師によって開かれました。歓喜天（聖天）を祀り、商売繁盛のご利益で有名。豪商住友家も厚く信仰しました。"
+  },
+  {
+    q: "大台ヶ原は年間降水量が非常に多いことで有名ですが、その量は？",
+    options: ["約2,000mm","約3,000mm","約4,000mm","約5,000mm"],
+    answer: 2,
+    comment: "大台ヶ原の年間降水量は平均約4,000〜5,000mmにも達し、世界でも有数の多雨地帯。1年の3分の1は霧や雨という日もあります。"
+  },
+  {
+    q: "奈良のならまちで「身代わり猿」は玄関先にどのように飾るか？",
+    options: ["置いて飾る","吊るして飾る","埋めて祈る","燃やして祈願する"],
+    answer: 1,
+    comment: "身代わり猿はならまちの伝統的な魔除け。玄関の軒先に吊るし、病気や災難を持ち主の代わりに引き受けてくれると信じられています。"
+  },
+  {
+    q: "飛鳥時代に「遷都」した際、都の名前として正しいのは？",
+    options: ["難波宮","藤原京","大津京","恭仁京"],
+    answer: 1,
+    comment: "690年に持統天皇が建設した「藤原京」（橿原市・明日香村）が日本初の本格的な都城。その後710年に平城京（奈良）へ遷都されました。"
+  },
+  {
+    q: "「花の御寺」として名高い長谷寺の本尊は？",
+    options: ["釈迦如来","阿弥陀如来","十一面観音","地蔵菩薩"],
+    answer: 2,
+    comment: "長谷寺の本尊は十一面観音菩薩立像。高さ10mを超える巨大な観音像で、国内最大の木造仏のひとつ。春は牡丹、秋は紅葉でも有名です。"
+  },
+  {
+    q: "奈良県の吉野郡十津川村は日本最大の何で有名？",
+    options: ["最大の山村","最大の面積の村","最大の人口の村","最大の川の村"],
+    answer: 1,
+    comment: "十津川村は面積672km²で、日本一広い村（市町村の中で）として有名です。面積は大阪府の約3分の1にも相当します。"
+  },
+  {
+    q: "当麻寺（たいまでら）で有名な「中将姫伝説」にまつわる法会は？",
+    options: ["練供養（ねりくよう）","花会式","蓮花会","星祭り"],
+    answer: 0,
+    comment: "毎年5月14日に行われる「練供養（ねりくよう）」は、極楽から25菩薩が来迎する様子を再現した壮麗な法会。中将姫の往生にちなむ行事です。"
+  },
+  {
+    q: "東大寺大仏殿の柱に「柱くぐり」の穴がありますが、穴の大きさは大仏の何と同じ？",
+    options: ["手の大きさ","鼻の穴の大きさ","耳の大きさ","指の太さ"],
+    answer: 1,
+    comment: "大仏の鼻の穴と同じ大きさといわれる柱の穴を通り抜けると、無病息災や頭が良くなるとされています。子どもは通り抜けやすいですが大人は一苦労。"
+  },
+  {
+    q: "奈良時代、鑑真（がんじん）が来日して建立した寺は？",
+    options: ["元興寺","東大寺","唐招提寺","興福寺"],
+    answer: 2,
+    comment: "唐の高僧・鑑真は6度の航海で失明しながらも753年に来日し、759年に唐招提寺を建立しました。戒律を日本にもたらした高僧として讃えられています。"
+  },
+  {
+    q: "奈良の有名な「鹿せんべい」を販売しているのはどの団体？",
+    options: ["奈良市観光協会","奈良の鹿愛護会","春日大社神社庁","東大寺寺務所"],
+    answer: 1,
+    comment: "鹿せんべいは「奈良の鹿愛護会」が販売収益を鹿の保護活動にあてています。米ぬかと小麦粉で作られた無塩の素朴なせんべいです。"
+  },
+  {
+    q: "「元興寺（がんごうじ）」はもとどこにあった寺を移転したもの？",
+    options: ["飛鳥寺","四天王寺","法輪寺","橘寺"],
+    answer: 0,
+    comment: "元興寺は、蘇我馬子が建立した飛鳥寺（飛鳥に現存）を平城遷都に際して移転・改称したもの。日本最古の本格的な仏教寺院です。"
+  },
+  {
+    q: "奈良市の「志賀直哉旧居」がある地区は？",
+    options: ["ならまち","高畑","西ノ京","帯解"],
+    answer: 1,
+    comment: "小説家・志賀直哉は1929〜38年に奈良・高畑に住み、「暗夜行路」を完成させました。旧居は今も保存されており見学できます。"
+  },
+  {
+    q: "奈良の伝統芸能「大和猿楽」から発展したのは？",
+    options: ["歌舞伎","能（のう）","狂言","文楽"],
+    answer: 1,
+    comment: "能（のう）は大和猿楽（奈良を拠点とした猿楽）から生まれました。観阿弥・世阿弥父子が足利義満の庇護のもとで大成させました。"
+  },
+  {
+    q: "奈良の「薬師寺」にある「東塔」（三重塔）の建立年代は？",
+    options: ["飛鳥時代","奈良時代","平安時代","鎌倉時代"],
+    answer: 1,
+    comment: "薬師寺の東塔は奈良時代（8世紀）の建立で、薬師寺伽藍の中で唯一当時から残る建造物。「凍れる音楽」とも称される美しい塔です。"
+  },
+  {
+    q: "「曽爾（そに）高原」のすすきの見頃は？",
+    options: ["8月","9〜10月","11〜12月","翌1月"],
+    answer: 1,
+    comment: "曽爾高原のすすきは9月下旬〜11月中旬が見頃。秋の夕日に輝く一面のすすき原は幻想的で、多くの観光客が訪れます。"
+  },
+  {
+    q: "奈良時代の「奈良の大仏」鋳造を主導した僧侶は？",
+    options: ["玄奘","鑑真","行基","最澄"],
+    answer: 2,
+    comment: "行基（ぎょうき）は大仏造立の際に民衆に呼びかけて資金・労力を集め、大仏建立を大きく助けた僧侶。「菩薩」と呼ばれ尊崇されました。"
+  },
+  {
+    q: "「洞川（どろがわ）温泉」がある奈良県の地域は？",
+    options: ["吉野郡天川村","吉野郡十津川村","宇陀市","五條市"],
+    answer: 0,
+    comment: "洞川温泉は奈良県吉野郡天川村にある山岳温泉郷。大峯山登山の基地でもあり、陀羅尼助（だらにすけ）という胃腸薬の産地としても有名です。"
+  },
+  {
+    q: "奈良県の「橿原市昆虫館」で有名な展示は何？",
+    options: ["恐竜のレプリカ","生きている熱帯の蝶","世界の虫の標本のみ","化石展示"],
+    answer: 1,
+    comment: "橿原市昆虫館は熱帯植物に囲まれた温室でリュウキュウアサギマダラなどの生きた蝶が飛び回る展示が有名。昆虫好きには必見のスポットです。"
+  },
+  {
+    q: "聖徳太子が建立したと伝えられ、四天王寺式伽藍配置で有名な奈良の寺は？",
+    options: ["法起寺","中宮寺","法輪寺","法隆寺"],
+    answer: 3,
+    comment: "法隆寺は聖徳太子と推古天皇が建立したと伝えられ、世界最古の木造建築群を持ちます。飛鳥時代の四天王寺式配置（南から中門・塔・金堂・講堂）が特徴。"
+  },
+];
+
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+let history = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  currentQuestions = shuffle(ALL_QUESTIONS).slice(0, 10);
+  currentIndex = 0;
+  score = 0;
+  history = [];
+  answered = false;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = currentQuestions[currentIndex];
+  answered = false;
+  document.getElementById('q-header').textContent = `問題 ${currentIndex + 1}`;
+  document.getElementById('progress-label').textContent = `問題 ${currentIndex + 1} / 10`;
+  document.getElementById('progress-bar').style.width = `${(currentIndex / 10) * 100}%`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-comment').className = 'answer-comment';
+  document.getElementById('next-btn').style.display = 'none';
+
+  // シャッフルした選択肢（正解インデックスを追跡）
+  const optionsWithIndex = q.options.map((o, i) => ({text: o, isAnswer: i === q.answer}));
+  const shuffled = shuffle(optionsWithIndex);
+  
+  const optionsDiv = document.getElementById('q-options');
+  optionsDiv.innerHTML = shuffled.map((opt, i) => `
+    <button class="option-btn" onclick="selectAnswer(this, ${opt.isAnswer})">${opt.text}</button>
+  `).join('');
+}
+
+function selectAnswer(btn, isCorrect) {
+  if (answered) return;
+  answered = true;
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => {
+    b.disabled = true;
+    // 正解ボタンをハイライト
+    if (b.onclick.toString().includes('true')) {
+      b.classList.add('reveal');
+    }
+  });
+  if (isCorrect) {
+    btn.classList.add('correct');
+    score++;
+  } else {
+    btn.classList.add('wrong');
+    // 正解ボタンをreveal
+    allBtns.forEach(b => {
+      if (b.classList.contains('reveal')) b.classList.add('correct');
+    });
+  }
+  const q = currentQuestions[currentIndex];
+  const commentDiv = document.getElementById('q-comment');
+  commentDiv.textContent = (isCorrect ? '✅ 正解！' : '❌ 不正解…') + '　' + q.comment;
+  commentDiv.className = 'answer-comment show';
+  history.push({q: q.q, correct: isCorrect});
+  document.getElementById('next-btn').style.display = 'block';
+  document.getElementById('next-btn').textContent = currentIndex < 9 ? '次の問題 →' : '結果を見る！';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= 10) {
+    showResult();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('result-score').textContent = `${score} / 10問正解`;
+
+  let label, comment;
+  if (score === 10) {
+    label = '🏆 naramania';
+    comment = 'おめでとうございます！あなたは真のnaramaniaです！！\n知識も愛情も満点。奈良のすべてをわかっていますね！\nnara-maniaの名に恥じない、素晴らしい奈良通です！';
+  } else if (score >= 7) {
+    label = '🌸 ぷちnaramania';
+    comment = 'すごい！かなりの奈良通ですね！\nあともう少しで本物のnaramaniaの域に達します。\n奈良への愛情が感じられる結果でした！';
+  } else if (score >= 4) {
+    label = '🦌 観光客レベル';
+    comment = '奈良を楽しんでいますね！\n有名どころはよく知っているようです。\nもう少し深く奈良を掘り下げると、もっと面白い発見があるかも！';
+  } else {
+    label = '😅 残念レベル';
+    comment = 'まだまだこれからです！\n奈良には素晴らしい寺社仏閣、歴史、自然がたくさんあります。\nぜひnara-maniaのページを読んで、奈良を深く知ってください！';
+  }
+
+  document.getElementById('result-label').textContent = label;
+  document.getElementById('result-comment').textContent = comment;
+
+  // 問題一覧
+  const breakdown = history.map((h, i) => `
+    <tr class="${h.correct ? 'correct-row' : 'wrong-row'}">
+      <td>${i + 1}</td>
+      <td>${h.correct ? '✅' : '❌'}</td>
+      <td style="font-size:11px;">${escHtml(h.q)}</td>
+    </tr>
+  `).join('');
+  document.getElementById('score-breakdown').innerHTML = `
+    <p style="margin:8px 0;font-weight:bold;color:#333300;">問題別結果：</p>
+    <table><tr><th style="background:#CCCC99;padding:3px 6px;">#</th><th style="background:#CCCC99;padding:3px 6px;">正誤</th><th style="background:#CCCC99;padding:3px 6px;text-align:left;">問題</th></tr>
+    ${breakdown}</table>
+  `;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
