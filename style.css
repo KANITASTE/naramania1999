@@ -1,0 +1,416 @@
+/* nara-mania - 1998年の雰囲気を残しつつ現代ブラウザ対応 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "MS Mincho", "ＭＳ 明朝", "Hiragino Mincho Pro", serif;
+  background: #ffffff;
+}
+
+/* テーブルレイアウト維持・センター揃え */
+.page-center {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+/* 当時のBLINKタグ再現 */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.blink {
+  animation: blink 1s step-start infinite;
+}
+
+/* フレーム風レイアウト */
+.frame-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.frame-menu {
+  width: 200px;
+  min-width: 200px;
+  background: #000066;
+  overflow-y: auto;
+}
+
+.frame-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* メニューナビ */
+.menu-logo {
+  padding: 8px;
+}
+
+.menu-logo img {
+  max-width: 100%;
+}
+
+.menu-section-header {
+  background: #FFCC00;
+  color: #003399;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+.menu-item {
+  background: #666666;
+  padding: 3px 8px;
+}
+
+.menu-item a {
+  color: #FFCC00;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.menu-item a:hover {
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+.menu-side {
+  background: #336666;
+  padding: 4px 8px;
+}
+
+.menu-side a {
+  color: #FFCC00;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* コンテンツページ共通 */
+.content-body {
+  background: #000000;
+  color: #FFCC00;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+.content-title {
+  text-align: center;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #FFCC00;
+  padding: 10px;
+  background: #000000;
+}
+
+.content-table {
+  margin: 0 auto;
+  background: #000000;
+  border-collapse: collapse;
+}
+
+.content-table td {
+  vertical-align: top;
+  padding: 4px;
+}
+
+.content-table img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* カラーブロック */
+.bg-red { background-color: #990000; }
+.bg-teal { background-color: #336666; }
+.bg-dark-teal { background-color: #000066; }
+.bg-purple { background-color: #660066; }
+.bg-dark-purple { background-color: #330066; }
+.bg-brown { background-color: #993300; }
+
+/* トップページ */
+.top-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.top-table td {
+  padding: 4px 6px;
+  vertical-align: top;
+}
+
+/* 掲示板スタイル */
+.bbs-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 10px;
+  background: #CCCC99;
+}
+
+.bbs-header {
+  text-align: center;
+  color: #003333;
+}
+
+.bbs-post {
+  border: 1px solid #666633;
+  margin-bottom: 10px;
+  background: #FFFFEE;
+}
+
+.bbs-post-header {
+  background: #999966;
+  color: white;
+  padding: 4px 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.bbs-post-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.bbs-post-body {
+  padding: 8px;
+  background: #FFFFEE;
+  color: #333300;
+}
+
+.bbs-form {
+  background: #EEEECC;
+  border: 1px solid #999966;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.bbs-form table {
+  width: 100%;
+}
+
+.bbs-form input[type="text"],
+.bbs-form textarea,
+.bbs-form select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  border: 1px inset #999966;
+  background: #FFFFF8;
+}
+
+.bbs-form input[type="submit"] {
+  background: #999966;
+  color: white;
+  border: 2px outset #CCCC99;
+  cursor: pointer;
+  padding: 2px 10px;
+  font-weight: bold;
+}
+
+/* チャット風 */
+.chat-container {
+  background: #000066;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-box {
+  width: 640px;
+  max-width: 98vw;
+  background: #CCCCFF;
+  border: 3px outset #9999FF;
+  font-family: "MS Gothic", monospace;
+}
+
+.chat-title-bar {
+  background: #000099;
+  color: white;
+  padding: 4px 8px;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chat-messages {
+  height: 300px;
+  overflow-y: auto;
+  background: #FFFFFF;
+  border: 2px inset #9999FF;
+  margin: 4px;
+  padding: 4px;
+  font-size: 12px;
+}
+
+.chat-msg {
+  margin-bottom: 4px;
+  padding: 2px 4px;
+}
+
+.chat-msg-name {
+  color: #0000CC;
+  font-weight: bold;
+}
+
+.chat-msg-time {
+  color: #666666;
+  font-size: 10px;
+}
+
+.chat-input-area {
+  background: #DDDDFF;
+  padding: 4px 8px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.chat-input-area input[type="text"] {
+  flex: 1;
+  font-family: inherit;
+  font-size: 12px;
+  border: 2px inset #9999FF;
+  background: #FFFFF8;
+  padding: 2px;
+}
+
+.chat-btn {
+  background: #9999FF;
+  color: white;
+  border: 2px outset #CCCCFF;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 6px;
+}
+
+/* 朱印カタログ */
+.syuin-body {
+  background: #990000;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.syuin-table {
+  margin: 0 auto;
+}
+
+.syuin-table img {
+  border: 2px solid #FFCCCC;
+  transition: border-color 0.2s;
+}
+
+.syuin-table img:hover {
+  border-color: #FFD700;
+}
+
+/* チェック／クイズ */
+.quiz-container {
+  background: lemonchiffon;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+.quiz-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 95%;
+  max-width: 600px;
+}
+
+.quiz-header {
+  background: orange;
+  color: white;
+  text-align: center;
+  padding: 4px;
+}
+
+.quiz-row td {
+  padding: 6px 8px;
+  border: 1px solid #CCCC00;
+  background: #FFCCFF;
+}
+
+.quiz-row:nth-child(odd) td {
+  background: #FFDDFF;
+}
+
+.quiz-options {
+  white-space: nowrap;
+}
+
+/* CE部屋 */
+.ce-body {
+  background: #666600;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+.ce-table {
+  margin: 0 auto;
+}
+
+/* 日記 */
+.nikki-body {
+  background: #00CCFF;
+  padding: 10px;
+  min-height: 100vh;
+}
+
+.nikki-table {
+  width: 98%;
+  max-width: 500px;
+  margin: 0 auto 10px;
+  border-collapse: collapse;
+}
+
+.nikki-date {
+  background: #FFCC00;
+  padding: 4px 8px;
+  font-weight: bold;
+}
+
+.nikki-content {
+  background: #FFFFFF;
+  padding: 8px;
+}
+
+/* 土産 */
+.miyage-body {
+  background: #FFFFFF;
+  padding: 10px;
+}
+
+/* リンク */
+.rinku-body {
+  background: #336666;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+/* レスポンシブ */
+@media (max-width: 600px) {
+  .frame-layout {
+    flex-direction: column;
+  }
+  .frame-menu {
+    width: 100%;
+    min-width: unset;
+  }
+  .content-table, .top-table {
+    width: 100% !important;
+  }
+  .content-table img {
+    max-width: 100%;
+    height: auto !important;
+    width: auto !important;
+  }
+}
